@@ -28,10 +28,24 @@ async function run() {
     const publisherCollection = client
       .db("newspaperDB")
       .collection("publishers");
-    //----------------------------------------------------
+    //-----------------------Publisher-----------------------------
     //show publisher
     app.get("/publishers", async (req, res) => {
       const result = await publisherCollection.find().toArray();
+      res.send(result);
+    });
+    //----------------------Articles-------------------------------
+    //insert Articles
+    app.post("/articles", async (req, res) => {
+      const newsArticles = req.body;
+      console.log("News Articles", newsArticles);
+      const result = await newsCollection.insertOne(newsArticles);
+      res.send(result);
+    });
+
+    //get
+    app.get("/articles", async (req, res) => {
+      const result = await newsCollection.find().toArray();
       res.send(result);
     });
     //-----------------------------------------------------
