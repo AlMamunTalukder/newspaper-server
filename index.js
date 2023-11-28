@@ -28,6 +28,7 @@ async function run() {
     const publisherCollection = client
       .db("newspaperDB")
       .collection("publishers");
+
     //-----------------------Publisher-----------------------------
     //show publisher
     app.get("/publishers", async (req, res) => {
@@ -64,6 +65,31 @@ async function run() {
       const result = await newsCollection.updateOne(query, {
         $inc: { viewCount: 1 },
       });
+      res.send(result);
+    });
+
+    //show myarticles
+    app.get("/article/:email", async (req, res) => {
+      const publisherEmail = req.params.email;
+      const result = await newsCollection
+        .find({
+          publisherEmail,
+        })
+        .toArray();
+      res.send(result);
+    });
+    app.get("/article/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await newsCollection.findOne(query);
+      res.send(result);
+      console.log(id);
+    });
+    //delete
+    app.delete("/article/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await newsCollection.deleteOne(query);
       res.send(result);
     });
 
