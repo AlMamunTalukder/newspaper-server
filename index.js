@@ -85,6 +85,32 @@ async function run() {
       res.send(result);
       console.log(id);
     });
+
+    //update
+    app.get("/article/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await newsCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.put("/article/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upset: true };
+      const updateArticle = req.body;
+      const article = {
+        $set: {
+          title: updateArticle.title,
+          image: updateArticle.image,
+          tags: updateArticle.tags,
+          description: updateArticle.description,
+        },
+      };
+      const result = await newsCollection.updateOne(filter, article, options);
+      res.send(result);
+    });
+
     //delete
     app.delete("/article/:id", async (req, res) => {
       const id = req.params.id;
