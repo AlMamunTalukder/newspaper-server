@@ -47,10 +47,11 @@ async function run() {
     //get
     app.get("/articles", async (req, res) => {
       const result = await newsCollection.find().toArray();
+      const sortedArticles = result.sort((a, b) => b.viewCount - a.viewCount);
       res.send(result);
     });
-    //for show details
 
+    //for show details
     app.get("/articles/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
