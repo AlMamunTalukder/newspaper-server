@@ -30,11 +30,20 @@ async function run() {
       .collection("publishers");
 
     //-----------------------Publisher-----------------------------
+
+    //Add Publisher
+    app.post("/publishers", async (req, res) => {
+      const newPublisher = req.body;
+      console.log("New Publisher", newPublisher);
+      const result = await publisherCollection.insertOne(newPublisher);
+      res.send(result);
+    });
     //show publisher
     app.get("/publishers", async (req, res) => {
       const result = await publisherCollection.find().toArray();
       res.send(result);
     });
+
     //----------------------Articles-------------------------------
     //insert Articles
     app.post("/articles", async (req, res) => {
