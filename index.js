@@ -28,6 +28,20 @@ async function run() {
     const publisherCollection = client
       .db("newspaperDB")
       .collection("publishers");
+    const userCollection = client.db("newspaperDB").collection("users");
+    //------------user----------------
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      console.log("New Publisher", user);
+      //insert email if user doesn't exists: you can do this many ways (1. email unique, 2. upsert, 3. db checking)
+      const query = { email: user.email };
+      const existingUser = await userCollection.findOne(query);
+      if (existingUser) {
+        return res.send({ message: "user already exists", insertedId: null });
+      }
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
 
     //-----------------------Publisher-----------------------------
 
@@ -125,7 +139,7 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
 
-      const options = { upset: true };
+      const options = { upsert: true };
       const updateArticle = req.body;
       const article = {
         $set: {
