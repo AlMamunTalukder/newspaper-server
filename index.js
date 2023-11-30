@@ -43,6 +43,13 @@ async function run() {
       res.send(result);
     });
 
+    //show user
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const result = await userCollection.find({ email: email }).toArray();
+      res.send(result);
+    });
+
     //-----------------------Publisher-----------------------------
 
     //Add Publisher
