@@ -57,7 +57,7 @@ async function run() {
     app.get("/articles", async (req, res) => {
       const result = await newsCollection.find().toArray();
       const sortedArticles = result.sort((a, b) => b.viewCount - a.viewCount);
-      res.send(result);
+      res.send(sortedArticles);
     });
 
     //for show details
@@ -88,6 +88,7 @@ async function run() {
         .toArray();
       res.send(result);
     });
+
     app.get("/article/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -107,6 +108,7 @@ async function run() {
     app.put("/article/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
+
       const options = { upset: true };
       const updateArticle = req.body;
       const article = {
@@ -118,6 +120,16 @@ async function run() {
         },
       };
       const result = await newsCollection.updateOne(filter, article, options);
+      res.send(result);
+    });
+
+    //update dashboard status -
+    app.put("/article/approved/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const update = { $set: { status: "approved" } };
+
+      const result = await newsCollection.updateOne(filter, update);
       res.send(result);
     });
 
