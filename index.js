@@ -60,6 +60,22 @@ async function run() {
       res.send(sortedArticles);
     });
 
+    app.get("/article/status/:status", async (req, res) => {
+      const status = req.params.status;
+      const result = await newsCollection
+        .find({ status })
+        .sort({ viewCount: -1 })
+        .toArray();
+
+      res.send(result);
+    });
+
+    app.get("/article/status/premium", async (req, res) => {
+      const result = await newsCollection.find({ status: "premium" }).toArray();
+      console.log("Premium Articles:", result);
+      res.send(result);
+    });
+
     //for show details
     app.get("/articles/:id", async (req, res) => {
       const id = req.params.id;
