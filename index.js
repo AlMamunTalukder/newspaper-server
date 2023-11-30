@@ -132,7 +132,15 @@ async function run() {
       const result = await newsCollection.updateOne(filter, update);
       res.send(result);
     });
+    //update dashboard status -
+    app.put("/article/premium/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const update = { $set: { status: "premium" } };
 
+      const result = await newsCollection.updateOne(filter, update);
+      res.send(result);
+    });
     //delete
     app.delete("/article/:id", async (req, res) => {
       const id = req.params.id;
